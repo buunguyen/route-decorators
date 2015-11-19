@@ -1,6 +1,13 @@
 ## route-decorators for Koa/Express
 
-[ES7 decorators](https://github.com/wycats/javascript-decorators) that simplify Koa and Express route creation. Specifically, you can write your controllers like below and have all the routes populated.
+[ES7 decorators](https://github.com/wycats/javascript-decorators) that simplify Koa and Express route creation.
+
+[![NPM](https://nodei.co/npm/route-decorators.png?compact=true)](https://www.npmjs.com/package/route-decorators)
+
+[![Build Status](https://travis-ci.org/buunguyen/route-decorators.svg?branch=master)](https://travis-ci.org/buunguyen/route-decorators)
+
+### Usage
+You can write your controllers like below and have all the routes populated.
 
 __Koa__
 ```js
@@ -32,24 +39,18 @@ class UserCtrl {
 }
 ```
 
+Once the decorators are applied, every controller instance will receive a `$routes` array, which you can use to define actual Koa/Express routes (or pretty much anything you want).
 
-### Usage
-Once the decorators are applied, every instance of the controller will receive a `$routes` property, which is the array of routes. Although you can do anything with this property, you'll mostly likely use it to define actual Koa/Express routes.
-
-Assume the above `UserCtrl` definition, you can define routes in `UserCtrl`'s constructor (although really you can put the code anywhere), as follows:
+Assume the above `UserCtrl` definition, you can define routes in `UserCtrl`'s constructor (although really you can put the code anywhere) as follows:
 
 __Koa__
 ```js
-@controller(...)
-class UserCtrl {
-  constructor() {
-    this.router = new Router()
-    for (const {method, url, middleware, fnName} of this.$routes) {
-      this.router[method](url, ...middleware, this[fnName].bind(this))
-    }
-  }
+import Router from 'koa-66'
 
-  // decorated methods as above
+// inside constructor
+this.router = new Router()
+for (const {method, url, middleware, fnName} of this.$routes) {
+  this.router[method](url, ...middleware, this[fnName].bind(this))
 }
 ```
 
@@ -57,18 +58,12 @@ __Express__
 ```js
 import express from 'express'
 
-@controller(...)
-class UserCtrl {
-  constructor() {
-    this.router = express.Router()
-    for (const {method, url, middleware, fnName} of this.$routes) {
-      this.router[method](url, ...middleware, (req, res, next) => {
-        this[fnName](req, res, next).catch(next)
-      })
-    }
-  }
-
-  // decorated methods as above
+// inside constructor
+this.router = express.Router()
+for (const {method, url, middleware, fnName} of this.$routes) {
+  this.router[method](url, ...middleware, (req, res, next) => {
+    this[fnName](req, res, next).catch(next)
+  })
 }
 ```
 
