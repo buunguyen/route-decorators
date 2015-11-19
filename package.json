@@ -1,6 +1,6 @@
 {
   "name": "route-decorators",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ES7 decorators that simplify Koa and Express route creation",
   "main": "lib/decorators.js",
   "jsnext:main": "src/decorators.js",

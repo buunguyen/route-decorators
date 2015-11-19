@@ -1,11 +1,6 @@
 const PREFIX = '$$route_'
 
-// @route(method, path: optional, ...middleware: optional)
-export function route(method, ...args) {
-  if (typeof method !== 'string') {
-    throw new Error('The first argument must be an HTTP method')
-  }
-
+function destruct(args) {
   const hasPath = typeof args[0] === 'string'
   const path = hasPath ? args[0] : ''
   const middleware = hasPath ? args.slice(1) : args
@@ -13,6 +8,17 @@ export function route(method, ...args) {
   if (middleware.some(m => typeof m !== 'function')) {
     throw new Error('Middleware must be function')
   }
+
+  return [path, middleware]
+}
+
+// @route(method, path: optional, ...middleware: optional)
+export function route(method, ...args) {
+  if (typeof method !== 'string') {
+    throw new Error('The first argument must be an HTTP method')
+  }
+
+  const [path, middleware] = destruct(args)
 
   return function (target, name, descriptor) {
     target[`${PREFIX}${name}`] = {method, path, middleware}
@@ -25,13 +31,7 @@ methods.forEach(method => exports[method] = route.bind(null, method))
 
 // @controller(path: optional, ...middleware: optional)
 export function controller(...args) {
-  const hasPath = typeof args[0] === 'string'
-  const ctrlPath = hasPath ? args[0] : ''
-  const ctrlMiddleware = hasPath ? args.slice(1) : args
-
-  if (ctrlMiddleware.some(m => typeof m !== 'function')) {
-    throw new Error('Middleware must be function')
-  }
+  const [ctrlPath, ctrlMiddleware] = destruct(args)
 
   return function (target) {
     const proto = target.prototype
