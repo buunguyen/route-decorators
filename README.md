@@ -1,13 +1,12 @@
 ## route-decorators for Koa/Express
 
-[ES7 decorators](https://github.com/wycats/javascript-decorators) that simplify Koa and Express route creation.
+
 
 [![NPM](https://nodei.co/npm/route-decorators.png?compact=true)](https://www.npmjs.com/package/route-decorators)
 
 [![Build Status](https://travis-ci.org/buunguyen/route-decorators.svg?branch=master)](https://travis-ci.org/buunguyen/route-decorators)
 
-### Usage
-You can write your controllers like below and have all the routes populated.
+[ES7 decorators](https://github.com/wycats/javascript-decorators) that simplify Koa and Express route creation. Using these decorators, you can write your controllers like below and have all the routes populated.
 
 __Koa__
 ```js
@@ -39,7 +38,7 @@ class UserCtrl {
 }
 ```
 
-Once the decorators are applied, every controller instance will receive a `$routes` array, which you can use to define actual Koa/Express routes (or pretty much anything you want).
+Once the decorators are applied, every controller instance will receive a `$routes` array, which you can use to define actual Koa/Express routes.
 
 Assume the above `UserCtrl` definition, you can define routes in `UserCtrl`'s constructor (although really you can put the code anywhere) as follows:
 
@@ -47,7 +46,7 @@ __Koa__
 ```js
 import Router from 'koa-66'
 
-// inside constructor
+// Inside controller constructor
 this.router = new Router()
 for (const {method, url, middleware, fnName} of this.$routes) {
   this.router[method](url, ...middleware, this[fnName].bind(this))
@@ -58,7 +57,7 @@ __Express__
 ```js
 import express from 'express'
 
-// inside constructor
+// Inside controller constructor
 this.router = express.Router()
 for (const {method, url, middleware, fnName} of this.$routes) {
   this.router[method](url, ...middleware, (req, res, next) => {
@@ -67,7 +66,7 @@ for (const {method, url, middleware, fnName} of this.$routes) {
 }
 ```
 
-Of course, you can move that logic in some base controller in your app and reuse it for every controller. For example:
+You can move the above logic to some base controller in your app and reuse it for every controller. For example:
 
 ```js
 class BaseCtrl {
@@ -88,9 +87,9 @@ class UserCtrl extends BaseCtrl {
 ### Decorators
  * `@controller(path: optional, ...middleware: optional)`
  * `@route(method, path: optional, ...middleware: optional)`
- * `@head`, `@options`, `@get`, `@post`, `@put`, `@patch`, `@del`, `@delete`, `@all`: convenient wrappers of `@route` that automatically supply the first argument (i.e. `method`).
+ * `@head`, `@options`, `@get`, `@post`, `@put`, `@patch`, `@del`, `@delete`, `@all`: wrappers of `@route` that automatically supply the `method` argument.
 
- ### Test
+### Test
 
 ```bash
 npm install
