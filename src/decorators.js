@@ -25,7 +25,7 @@ export function route(method, ...args) {
   }
 }
 
-// @method === @route(method, ...args)
+// @[method](...args) === @route(method, ...args)
 const methods = ['head', 'options', 'get', 'post', 'put', 'patch', 'del', 'delete', 'all']
 methods.forEach(method => exports[method] = route.bind(null, method))
 
