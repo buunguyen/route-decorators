@@ -1,6 +1,6 @@
 {
   "name": "route-decorators",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "ES7 decorators that simplify Koa and Express route creation",
   "main": "lib/decorators.js",
   "scripts": {
