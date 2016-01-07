@@ -7,7 +7,7 @@ function m3() {}
 function m4() {}
 
 describe('controller', () => {
-  const {controller, route, all, get, post} = decorators
+  const {controller, route, all, get, post, del} = decorators
 
   it('should add $routes', () => {
     @controller()
@@ -51,6 +51,19 @@ describe('controller', () => {
 
     assert.deepEqual((new Ctrl()).$routes, [
       {url: '/prefix/all', middleware: [], method: 'all', fnName: '_all'}
+    ])
+  })
+
+  it('should normalize `del` to `delete`', () => {
+    @controller()
+    class Ctrl {
+      @route('del', '/delete1') _delete1() {}
+      @del('/delete2') _delete2() {}
+    }
+
+    assert.deepEqual((new Ctrl()).$routes, [
+      {url: '/delete1', middleware: [], method: 'delete', fnName: '_delete1'},
+      {url: '/delete2', middleware: [], method: 'delete', fnName: '_delete2'}
     ])
   })
 

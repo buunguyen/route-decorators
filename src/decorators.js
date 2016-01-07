@@ -42,7 +42,7 @@ export function controller(...args) {
         const url = `${ctrlPath}${path}`
         const middleware = ctrlMiddleware.concat(actionMiddleware)
         const fnName = prop.substring(PREFIX.length)
-        return {method, url, middleware, fnName}
+        return {method: method === 'del' ? 'delete' : method, url, middleware, fnName}
       })
   }
 }
