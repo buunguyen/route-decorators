@@ -20,7 +20,7 @@ export function route(method, ...args) {
 
   const [path, middleware] = destruct(args)
 
-  return function (target, name, descriptor) {
+  return function (target, name) {
     target[`${PREFIX}${name}`] = {method, path, middleware}
   }
 }
